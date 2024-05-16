@@ -23,6 +23,9 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 RUN apt-get install -y \
     libmagickwand-dev --no-install-recommends
+
+RUN apt-get install mariadb-client -y;
+
 RUN pecl install imagick \
     && docker-php-ext-enable imagick
 

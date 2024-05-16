@@ -48,7 +48,7 @@ services:
       retries: 10
 
   mysql_gql:
-    image: mysql:8
+    image: mariadb:10.3
     restart: always
 
     volumes:
