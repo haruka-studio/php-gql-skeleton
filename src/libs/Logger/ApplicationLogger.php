@@ -2,23 +2,16 @@
 
 namespace Vertuoza\Libs\Logger;
 
-require_once __DIR__ . '/GcpLoggerFormatter.php';
-require_once __DIR__ . '/LogContext.php';
-
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Stringable;
-use Throwable;
-
 
 class ApplicationLogger
 {
   private static $instance = null;
   private Logger $logger;
   private string $serviceName;
-
-
 
   private function __construct(string $serviceName)
   {
@@ -28,7 +21,6 @@ class ApplicationLogger
       $stream = new StreamHandler('php://stdout', LogLevel::DEBUG);
       $formatter = new GcpLoggerFormatter(['serviceName', 'tenantId']);
       $formatter->setJsonPrettyPrint(isset($_ENV['MODE']) && $_ENV['MODE'] === 'DEVELOPMENT');
-
 
       $stream->setFormatter($formatter);
 

@@ -8,11 +8,10 @@ use Throwable;
 class BadUserInputException extends BadRequestException
 {
   public const code = 400;
-  /** 
+  /**
    * @var array<FieldError>
    */
   private array $fieldsError;
-
 
   /**
    * @param Array|FieldError $fieldsError The fields that contains the error

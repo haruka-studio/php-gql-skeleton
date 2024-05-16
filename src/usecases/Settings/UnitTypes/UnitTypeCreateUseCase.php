@@ -5,6 +5,7 @@ namespace Vertuoza\Usecases\Settings\UnitTypes;
 use React\Promise\Promise;
 use Vertuoza\Api\Graphql\Context\UserRequestContext;
 use Vertuoza\Entities\Settings\UnitTypeEntity;
+use Vertuoza\Libs\Exceptions\BadInputException;
 use Vertuoza\Repositories\RepositoriesFactory;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeRepository;
@@ -28,8 +29,9 @@ class UnitTypeCreateUseCase
    */
   public function handle(string $name): Promise
   {
-    if (empty(preg_match('/^[0-9a-z \-]+$/i', $name))) {
-      throw new \Exception('Name should contain only alphabet and spaces, and not nullable');
+    // Check that name contains only letters (allowing diacritics), numbers, space and hyphen
+    if (empty(preg_match('/^[0-9a-z\p{L} \-]+$/i', $name))) {
+      throw new BadInputException("Name should only contains numbers and/or letters");
     }
 
     $mutationData = new UnitTypeMutationData();

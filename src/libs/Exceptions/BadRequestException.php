@@ -2,8 +2,6 @@
 
 namespace Vertuoza\Libs\Exceptions;
 
-
-
 use Throwable;
 
 class BadRequestException extends BusinessException

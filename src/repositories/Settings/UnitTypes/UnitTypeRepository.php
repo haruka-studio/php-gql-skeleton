@@ -102,6 +102,7 @@ class UnitTypeRepository extends AbstractRepository
    */
   public function create(UnitTypeMutationData $data, string $tenantId): int|string
   {
+    // Create new UUID and use it to create new Unit Type
     $newId = Uuid::uuid4()->toString();
 
     $data = array_merge(['id' => $newId], UnitTypeMapper::serializeCreate($data, $tenantId));

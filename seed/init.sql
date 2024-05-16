@@ -19,11 +19,11 @@
 
 DROP TABLE IF EXISTS `tenant`;
 CREATE TABLE `tenant` (
-  `id` CHAR(36) NOT NULL DEFAULT (UUID()),  
+  `id` CHAR(36) NOT NULL DEFAULT (UUID()),
   `name` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  
-  PRIMARY KEY (`id`)    
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 INSERT INTO `tenant` (`id`, `name`) VALUES ('112c33ae-3dbe-431b-994d-fffffe6fd49b', 'Vertuoza');
@@ -46,7 +46,7 @@ INSERT INTO `unit_type` (`id`, `tenant_id`, `label`) VALUES ('4c2241c9-841f-44c9
 DROP TABLE IF EXISTS `collaborator`;
 CREATE TABLE `collaborator` (
   `id` CHAR(36) NOT NULL DEFAULT (UUID()),
-  `tenant_id` CHAR(36) DEFAULT NULL,  -- Changed to CHAR(36) to match the data type of `tenant.id`
+  `tenant_id` CHAR(36) NOT NULL,  -- Changed to CHAR(36) to match the data type of `tenant.id`
   `name` varchar(255) NOT NULL,
   `first_name` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,

@@ -12,7 +12,6 @@ use function React\Async\async;
 
 class CollaboratorRepository extends AbstractRepository
 {
-
   /**
    * Return the query builder for current table
    *
