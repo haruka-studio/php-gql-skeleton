@@ -3,6 +3,7 @@
 namespace Vertuoza\Repositories\Settings\UnitTypes;
 
 use Overblog\DataLoader\DataLoader;
+use Ramsey\Uuid\Uuid;
 use Vertuoza\Repositories\AbstractRepository;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
@@ -101,9 +102,11 @@ class UnitTypeRepository extends AbstractRepository
    */
   public function create(UnitTypeMutationData $data, string $tenantId): int|string
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
+    $newId = Uuid::uuid4()->toString();
+
+    $data = array_merge(['id' => $newId], UnitTypeMapper::serializeCreate($data, $tenantId));
+
+    $this->getQueryBuilder()->insert($data);
 
     return $newId;
   }
@@ -123,5 +126,4 @@ class UnitTypeRepository extends AbstractRepository
 
     $this->clearCache($id);
   }
-
 }
