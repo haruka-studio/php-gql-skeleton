@@ -13,6 +13,12 @@ type Query {
 }
 ```
 
+```gql
+type Mutation {
+  createUnitType(input: UnitTypeCreateInput!): UnitType!
+}
+```
+
 # Getting started
 
 you can simply run the solution with docker and docker-compose.

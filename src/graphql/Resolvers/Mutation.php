@@ -10,7 +10,7 @@ final class Mutation extends ObjectType
   public function __construct()
   {
     parent::__construct([
-      'name' => 'mutation',
+      'name' => 'Mutation',
       'fields' => function () {
         return [
           ...UnitTypeMutation::get(),
