@@ -3,30 +3,23 @@
 namespace Vertuoza\Repositories\Settings\UnitTypes;
 
 use Overblog\DataLoader\DataLoader;
-use Overblog\PromiseAdapter\PromiseAdapterInterface;
-use React\Promise\Promise;
-use Vertuoza\Repositories\Database\QueryBuilder;
+use Vertuoza\Repositories\AbstractRepository;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 
 use function React\Async\async;
 
-class UnitTypeRepository
+class UnitTypeRepository extends AbstractRepository
 {
-  protected array $getbyIdsDL;
-
   /**
-   * UnitTypeRepository constructor
+   * Return the query builder for current table
    *
-   * @param QueryBuilder $db
-   * @param PromiseAdapterInterface $dataLoaderPromiseAdapter
+   * @return \Illuminate\Database\Query\Builder
    */
-  public function __construct(
-    private QueryBuilder $db,
-    private PromiseAdapterInterface $dataLoaderPromiseAdapter
-  ) {
-    $this->getbyIdsDL = [];
+  protected function getQueryBuilder(): \Illuminate\Database\Query\Builder
+  {
+    return $this->db->getConnection()->table(UnitTypeModel::getTableName());
   }
 
   private function fetchByIds(string $tenantId, array $ids)
@@ -65,21 +58,6 @@ class UnitTypeRepository
     return $this->getbyIdsDL[$tenantId];
   }
 
-  protected function getQueryBuilder()
-  {
-    return $this->db->getConnection()->table(UnitTypeModel::getTableName());
-  }
-
-  public function getByIds(array $ids, string $tenantId): Promise
-  {
-    return $this->getDataloader($tenantId)->loadMany($ids);
-  }
-
-  public function getById(string $id, string $tenantId): Promise
-  {
-    return $this->getDataloader($tenantId)->load($id);
-  }
-
   public function countUnitTypeWithLabel(string $name, string $tenantId, string|int|null $excludeId = null)
   {
     return async(
@@ -113,14 +91,30 @@ class UnitTypeRepository
     )();
   }
 
+  /**
+   * Create new unit type.
+   *
+   * @param UnitTypeMutationData $data
+   * @param string $tenantId
+   *
+   * @return integer|string
+   */
   public function create(UnitTypeMutationData $data, string $tenantId): int|string
   {
     $newId = $this->getQueryBuilder()->insertGetId(
       UnitTypeMapper::serializeCreate($data, $tenantId)
     );
+
     return $newId;
   }
 
+  /**
+   * Update unit type.
+   *
+   * @param string $id
+   * @param UnitTypeMutationData $data
+   * @return void
+   */
   public function update(string $id, UnitTypeMutationData $data)
   {
     $this->getQueryBuilder()
@@ -130,13 +124,4 @@ class UnitTypeRepository
     $this->clearCache($id);
   }
 
-  private function clearCache(string $id)
-  {
-    foreach ($this->getbyIdsDL as $dl) {
-      if ($dl->key_exists($id)) {
-        $dl->clear($id);
-        return;
-      }
-    }
-  }
 }

@@ -3,30 +3,24 @@
 namespace Vertuoza\Repositories\Settings\Collaborators;
 
 use Overblog\DataLoader\DataLoader;
-use Overblog\PromiseAdapter\PromiseAdapterInterface;
-use React\Promise\Promise;
 use React\Promise\PromiseInterface;
-use Vertuoza\Repositories\Database\QueryBuilder;
+use Vertuoza\Repositories\AbstractRepository;
 use Vertuoza\Repositories\Settings\Collaborators\Models\CollaboratorMapper;
 use Vertuoza\Repositories\Settings\Collaborators\Models\CollaboratorModel;
 
 use function React\Async\async;
 
-class CollaboratorRepository
+class CollaboratorRepository extends AbstractRepository
 {
-  protected array $getbyIdsDL;
 
   /**
-   * CollaboratorRepository constructor
+   * Return the query builder for current table
    *
-   * @param QueryBuilder $db
-   * @param PromiseAdapterInterface $dataLoaderPromiseAdapter
+   * @return \Illuminate\Database\Query\Builder
    */
-  public function __construct(
-    private QueryBuilder $db,
-    private PromiseAdapterInterface $dataLoaderPromiseAdapter
-  ) {
-    $this->getbyIdsDL = [];
+  protected function getQueryBuilder(): \Illuminate\Database\Query\Builder
+  {
+    return $this->db->getConnection()->table(CollaboratorModel::getTableName());
   }
 
   /**
@@ -42,8 +36,7 @@ class CollaboratorRepository
     return async(function () use ($tenantId, $ids) {
       $query = $this->getQueryBuilder()
         ->where(function ($query) use ($tenantId) {
-          $query->where([CollaboratorModel::getTenantColumnName() => $tenantId])
-            ->orWhere(CollaboratorModel::getTenantColumnName(), null);
+          $query->where([CollaboratorModel::getTenantColumnName() => $tenantId]);
         });
       $query->whereNull('deleted_at');
       $query->whereIn(CollaboratorModel::getPkColumnName(), $ids);
@@ -79,21 +72,11 @@ class CollaboratorRepository
     return $this->getbyIdsDL[$tenantId];
   }
 
-  protected function getQueryBuilder()
-  {
-    return $this->db->getConnection()->table(CollaboratorModel::getTableName());
-  }
-
-  public function getByIds(array $ids, string $tenantId): Promise
-  {
-    return $this->getDataloader($tenantId)->loadMany($ids);
-  }
-
-  public function getById(string $id, string $tenantId): Promise
-  {
-    return $this->getDataloader($tenantId)->load($id);
-  }
-
+  /**
+   * Find all collaborators for current tenant ID
+   *
+   * @param string $tenantId
+   */
   public function findMany(string $tenantId)
   {
     return async(

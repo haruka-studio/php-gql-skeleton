@@ -25,6 +25,7 @@ final class Query extends ObjectType
         ];
       }
     ];
+
     parent::__construct($config);
   }
 }
