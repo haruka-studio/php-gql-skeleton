@@ -9,15 +9,13 @@ final class Mutation extends ObjectType
 {
   public function __construct()
   {
-    $config = [
+    parent::__construct([
       'name' => 'mutation',
       'fields' => function () {
         return [
-          ...UnitTypeMutation::get()
+          ...UnitTypeMutation::get(),
         ];
-      }
-    ];
-
-    parent::__construct($config);
+      },
+    ]);
   }
 }
