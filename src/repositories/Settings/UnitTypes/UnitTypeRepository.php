@@ -15,15 +15,17 @@ use function React\Async\async;
 class UnitTypeRepository
 {
   protected array $getbyIdsDL;
-  private QueryBuilder $db;
-  protected PromiseAdapterInterface $dataLoaderPromiseAdapter;
 
+  /**
+   * UnitTypeRepository constructor
+   *
+   * @param QueryBuilder $db
+   * @param PromiseAdapterInterface $dataLoaderPromiseAdapter
+   */
   public function __construct(
-    private QueryBuilder $database,
-    PromiseAdapterInterface $dataLoaderPromiseAdapter
+    private QueryBuilder $db,
+    private PromiseAdapterInterface $dataLoaderPromiseAdapter
   ) {
-    $this->db = $database;
-    $this->dataLoaderPromiseAdapter = $dataLoaderPromiseAdapter;
     $this->getbyIdsDL = [];
   }
 
@@ -35,7 +37,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -62,7 +64,6 @@ class UnitTypeRepository
 
     return $this->getbyIdsDL[$tenantId];
   }
-
 
   protected function getQueryBuilder()
   {

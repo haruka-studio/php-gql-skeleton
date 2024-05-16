@@ -50,9 +50,7 @@ class RequestContext
     {
         return function (ServerRequestInterface $request, callable $next) use ($dataLoaderPromiseAdapter) {
             // Recreate a new connection each http call/
-
             $database = new QueryBuilder();
-
 
             $userContext = new UserRequestContext('448ef4f1-56e1-48be-838c-d147b5f09705', '112c33ae-3dbe-431b-994d-fffffe6fd49b');
 
@@ -65,7 +63,6 @@ class RequestContext
             $context->request = $request;
             $context->headerContext = array();
             $context->userContext = $userContext;
-
 
             return $next(
                 $request->withAttribute('app-context', $context)
