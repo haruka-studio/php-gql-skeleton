@@ -15,6 +15,12 @@ class UnitTypeCreateUseCase
   private UnitTypeRepository $unitTypeRepository;
   private UserRequestContext $userContext;
 
+  /**
+   * UnitTypeCreateUseCase constructor
+   *
+   * @param RepositoriesFactory $repositories
+   * @param UserRequestContext $userContext
+   */
   public function __construct(
     RepositoriesFactory $repositories,
     UserRequestContext $userContext
@@ -24,13 +30,16 @@ class UnitTypeCreateUseCase
   }
 
   /**
+   * Handle request
+   *
    * @param string $name id of the unit type to retrieve
+   *
    * @return Promise<UnitTypeEntity>
    */
   public function handle(string $name): Promise
   {
-    // Check that name contains only letters (allowing diacritics), numbers, space and hyphen
-    if (empty(preg_match('/^[0-9a-z\p{L} \-]+$/i', $name))) {
+    // Check that name contains only letters, numbers, space and hyphen
+    if (empty(preg_match('/^[0-9a-z \-]+$/i', $name))) {
       throw new BadInputException("Name should only contains numbers and/or letters");
     }
 

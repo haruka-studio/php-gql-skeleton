@@ -4,6 +4,7 @@ namespace Vertuoza\Usecases\Settings\Collaborators;
 
 use React\Promise\Promise;
 use Vertuoza\Api\Graphql\Context\UserRequestContext;
+use Vertuoza\Entities\Settings\CollaboratorEntity;
 use Vertuoza\Repositories\RepositoriesFactory;
 use Vertuoza\Repositories\Settings\Collaborators\CollaboratorRepository;
 
@@ -27,6 +28,8 @@ class CollaboratorByIdUseCase
   }
 
   /**
+   * Handle request
+   *
    * @param string $id id of the unit type to retrieve
    *
    * @return Promise<CollaboratorEntity>

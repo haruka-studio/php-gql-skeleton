@@ -53,7 +53,7 @@ abstract class AbstractRepository
    *
    * @return void
    */
-  protected function clearCache(string $id)
+  protected function clearCache(string $id): void
   {
     foreach ($this->getbyIdsDL as $dl) {
       if ($dl->key_exists($id)) {

@@ -13,6 +13,26 @@ use function React\Async\async;
 class CollaboratorRepository extends AbstractRepository
 {
   /**
+   * Find all collaborators for current tenant ID
+   *
+   * @param string $tenantId
+   */
+  public function findMany(string $tenantId)
+  {
+    return async(
+      fn () => $this->getQueryBuilder()
+        ->whereNull('deleted_at')
+        ->where(function ($query) use ($tenantId) {
+          $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId);
+        })
+        ->get()
+        ->map(function ($row) {
+          return CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));
+        })
+    )();
+  }
+
+  /**
    * Return the query builder for current table
    *
    * @return \Illuminate\Database\Query\Builder
@@ -20,6 +40,25 @@ class CollaboratorRepository extends AbstractRepository
   protected function getQueryBuilder(): \Illuminate\Database\Query\Builder
   {
     return $this->db->getConnection()->table(CollaboratorModel::getTableName());
+  }
+
+  /**
+   * Returns the data loader for collaborator
+   *
+   * @param string $tenantId
+   *
+   * @return DataLoader
+   */
+  protected function getDataloader(string $tenantId): DataLoader
+  {
+    if (!isset($this->getbyIdsDL[$tenantId])) {
+      $dl = new DataLoader(function (array $ids) use ($tenantId) {
+        return $this->fetchByIds($tenantId, $ids);
+      }, $this->dataLoaderPromiseAdapter);
+      $this->getbyIdsDL[$tenantId] = $dl;
+    }
+
+    return $this->getbyIdsDL[$tenantId];
   }
 
   /**
@@ -50,44 +89,5 @@ class CollaboratorRepository extends AbstractRepository
         ->map(fn ($id) => $entities->get($id))
         ->toArray();
     })();
-  }
-
-  /**
-   * Returns the data loader for collaborator
-   *
-   * @param string $tenantId
-   *
-   * @return DataLoader
-   */
-  protected function getDataloader(string $tenantId): DataLoader
-  {
-    if (!isset($this->getbyIdsDL[$tenantId])) {
-      $dl = new DataLoader(function (array $ids) use ($tenantId) {
-        return $this->fetchByIds($tenantId, $ids);
-      }, $this->dataLoaderPromiseAdapter);
-      $this->getbyIdsDL[$tenantId] = $dl;
-    }
-
-    return $this->getbyIdsDL[$tenantId];
-  }
-
-  /**
-   * Find all collaborators for current tenant ID
-   *
-   * @param string $tenantId
-   */
-  public function findMany(string $tenantId)
-  {
-    return async(
-      fn () => $this->getQueryBuilder()
-        ->whereNull('deleted_at')
-        ->where(function ($query) use ($tenantId) {
-          $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId);
-        })
-        ->get()
-        ->map(function ($row) {
-          return CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));
-        })
-    )();
   }
 }

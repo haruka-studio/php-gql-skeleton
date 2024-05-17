@@ -12,6 +12,13 @@ class UnitTypeByIdUseCase
 {
   private UnitTypeRepository $unitTypeRepository;
   private UserRequestContext $userContext;
+
+  /**
+   * UnitTypeByIdUseCase constructor
+   *
+   * @param RepositoriesFactory $repositories
+   * @param UserRequestContext $userContext
+   */
   public function __construct(
     RepositoriesFactory $repositories,
     UserRequestContext $userContext
@@ -21,7 +28,10 @@ class UnitTypeByIdUseCase
   }
 
   /**
+   * Handle request
+   *
    * @param string $id id of the unit type to retrieve
+   *
    * @return Promise<UnitTypeEntity>
    */
   public function handle(string $id): Promise

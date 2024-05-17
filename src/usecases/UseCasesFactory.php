@@ -12,6 +12,12 @@ class UseCasesFactory
   public CollaboratorUseCases $collaborator;
   public UnitTypeUseCases $unitType;
 
+  /**
+   * UseCasesFactory constructor
+   *
+   * @param UserRequestContext $userContext
+   * @param RepositoriesFactory $repositories
+   */
   public function __construct(
     UserRequestContext $userContext,
     RepositoriesFactory $repositories)

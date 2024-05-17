@@ -11,6 +11,12 @@ class UnitTypeUseCases
   public UnitTypesFindManyUseCase $unitTypesFindMany;
   public UnitTypeCreateUseCase $unitTypeCreateUseCase;
 
+  /**
+   * UnitTypeUseCases constructor
+   *
+   * @param UserRequestContext $userContext
+   * @param RepositoriesFactory $repositories
+   */
   public function __construct(
     UserRequestContext $userContext,
     RepositoriesFactory $repositories

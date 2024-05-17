@@ -4,22 +4,32 @@ namespace Vertuoza\Repositories\Settings\Collaborators\Models;
 
 use DateTime;
 use stdClass;
+use Vertuoza\Repositories\ModelInterface;
 
-class CollaboratorModel
+class CollaboratorModel implements ModelInterface
 {
   public string $id;
   public string $name;
   public string $firstName;
   public ?DateTime $deleted_at;
   public ?string $tenant_id;
+
+  /**
+   * Transform an anonymous class into CollaboratorModel
+   *
+   * @param stdClass $data
+   *
+   * @return CollaboratorModel
+   */
   public static function fromStdclass(stdClass $data): CollaboratorModel
   {
     $model = new CollaboratorModel();
-    $model->id = $data->id;
-    $model->name = $data->name;
-    $model->firstName = $data->first_name;
+    $model->id = (string) $data->id;
+    $model->name = (string) $data->name;
+    $model->firstName = (string) $data->first_name;
     $model->deleted_at = $data->deleted_at;
     $model->tenant_id = $data->tenant_id;
+
     return $model;
   }
 
