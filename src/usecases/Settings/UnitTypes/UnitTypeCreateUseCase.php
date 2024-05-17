@@ -6,6 +6,8 @@ use React\Promise\Promise;
 use Vertuoza\Api\Graphql\Context\UserRequestContext;
 use Vertuoza\Entities\Settings\UnitTypeEntity;
 use Vertuoza\Libs\Exceptions\BadInputException;
+use Vertuoza\Libs\Exceptions\BadUserInputException;
+use Vertuoza\Libs\Exceptions\Validators\StringValidator;
 use Vertuoza\Repositories\RepositoriesFactory;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeRepository;
@@ -38,10 +40,12 @@ class UnitTypeCreateUseCase
    */
   public function handle(string $name): Promise
   {
-    // Check that name contains only letters, numbers, space and hyphen
-    if (empty(preg_match('/^[0-9a-z \-]+$/i', $name))) {
-      throw new BadInputException("Name should only contains numbers and/or letters");
-    }
+    $validator = new StringValidator('name', $name, "input");
+    $errors = $validator->notEmpty(true)->format('/^[0-9a-z \-]+$/i', 'letters, numbers, spaces and hyphens')->validate();
+
+    if (!empty($errors)) {
+      throw new BadUserInputException($errors, 'name');
+   }
 
     $mutationData = new UnitTypeMutationData();
     $mutationData->name = $name;
