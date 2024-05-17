@@ -22,24 +22,24 @@ $logger = startLogger();
 ini_set('memory_limit', $_ENV['MEMORY_LIMIT']);
 
 try {
-    $graphQLPromiseAdapter = new ReactPromiseAdapter();
-    $dataLoaderPromiseAdapter = new \Overblog\PromiseAdapter\Adapter\ReactPromiseAdapter();
+  $graphQLPromiseAdapter = new ReactPromiseAdapter();
+  $dataLoaderPromiseAdapter = new \Overblog\PromiseAdapter\Adapter\ReactPromiseAdapter();
 
-    $http = new React\Http\HttpServer(
-        new StreamingRequestMiddleware(),
-        new RequestBodyBufferMiddleware(20 * 1024 * 1024),
-        new RequestBodyParserMiddleware(20 * 1024 * 1024, 1),
-        GqlMiddlewares::sandbox(),
-        RequestContext::middleware($dataLoaderPromiseAdapter),
-        GqlMiddlewares::schema($graphQLPromiseAdapter, $dataLoaderPromiseAdapter),
-        fn (ServerRequest $request) => resolve(new Response(404))
-    );
+  $http = new React\Http\HttpServer(
+    new StreamingRequestMiddleware(),
+    new RequestBodyBufferMiddleware(20 * 1024 * 1024),
+    new RequestBodyParserMiddleware(20 * 1024 * 1024, 1),
+    GqlMiddlewares::sandbox(),
+    RequestContext::middleware($dataLoaderPromiseAdapter),
+    GqlMiddlewares::schema($graphQLPromiseAdapter, $dataLoaderPromiseAdapter),
+    fn (ServerRequest $request) => resolve(new Response(404))
+  );
 
-    $socket = new React\Socket\SocketServer('0.0.0.0:' . $_ENV['PORT']);
-    $http->listen($socket);
+  $socket = new React\Socket\SocketServer('0.0.0.0:' . $_ENV['PORT']);
+  $http->listen($socket);
 
-    ApplicationLogger::getInstance()->info("Server running on port " . $_ENV['PORT'] . PHP_EOL, new LogContext(null, null));
+  ApplicationLogger::getInstance()->info("Server running on port " . $_ENV['PORT'] . PHP_EOL, new LogContext(null, null));
 } catch (Throwable $e) {
-    ApplicationLogger::getInstance()->error($e, 'UNKNOWN_ERROR', new LogContext(null, null));
-    exit(0);
+  ApplicationLogger::getInstance()->error($e, 'UNKNOWN_ERROR', new LogContext(null, null));
+  exit(0);
 }

@@ -3,6 +3,7 @@
 namespace Vertuoza\Api\Graphql\Resolvers;
 
 use GraphQL\Type\Definition\ObjectType;
+use Vertuoza\Api\Graphql\Resolvers\Settings\Collaborators\CollaboratorQuery;
 use Vertuoza\Api\Graphql\Resolvers\Settings\UnitTypes\UnitTypeQuery;
 use Vertuoza\Api\Graphql\Types;
 
@@ -10,7 +11,7 @@ final class Query extends ObjectType
 {
   public function __construct()
   {
-    $config = [
+    parent::__construct([
       'fields' => function () {
         return [
           'hello' => [
@@ -19,10 +20,10 @@ final class Query extends ObjectType
               return 'world';
             }
           ],
-          ...UnitTypeQuery::get()
+          ...CollaboratorQuery::get(),
+          ...UnitTypeQuery::get(),
         ];
       }
-    ];
-    parent::__construct($config);
+    ]);
   }
 }

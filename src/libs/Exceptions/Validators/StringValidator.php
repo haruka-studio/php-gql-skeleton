@@ -6,12 +6,26 @@ use Vertuoza\Libs\Exceptions\FieldError;
 
 class StringValidator extends Validator
 {
-  public function __construct($field, $value, $path = "")
+  /**
+   * StringValidator constructor.
+   *
+   * @param string $field
+   * @param string $value
+   * @param string|null $path
+   */
+  public function __construct(string $field, string $value, ?string $path = "")
   {
     parent::__construct($field, $value, $path);
   }
 
-  public function notEmpty(bool $trimmed = false)
+  /**
+   * Check if value is not empty.
+   *
+   * @param boolean $trimmed
+   *
+   * @return self
+   */
+  public function notEmpty(bool $trimmed = false): self
   {
     $value = $trimmed ? trim($this->value) : $this->value;
     if (empty($value)) {
@@ -21,7 +35,13 @@ class StringValidator extends Validator
     return $this;
   }
 
-  public function max(int $max)
+  /**
+   * Check that value contains the maximum character set.
+   *
+   * @param integer $max
+   * @return self
+   */
+  public function max(int $max): self
   {
     if (isset($this->value) && strlen($this->value) > $max) {
       $this->errors[] = new FieldError($this->field, "Field cannot be longer than $max characters", "MAX_LENGTH", $this->path, ["max" => $max]);
@@ -30,10 +50,33 @@ class StringValidator extends Validator
     return $this;
   }
 
-  public function min(int $min)
+  /**
+   * Check that value contains the minimum character set.
+   *
+   * @param integer $min
+   *
+   * @return self
+   */
+  public function min(int $min): self
   {
-    if (isset($value) && strlen($this->value) > $min) {
+    if (isset($this->value) && strlen($this->value) > $min) {
       $this->errors[] = new FieldError($this->field, "Field cannot be less than $min characters", "MIN_LENGTH", $this->path, ["min" => $min]);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Check if value complies with the allowed format.
+   *
+   * @param string $format
+   *
+   * @return self
+   */
+  public function format(string $format, string $allowedFormat = ''): self
+  {
+    if (isset($this->value) && empty(preg_match($format, $this->value))) {
+      $this->errors[] = new FieldError($this->field, "Field does not comply with the allowed format (allowed: $allowedFormat)", "FORMAT", $this->path, ["allowed" => $allowedFormat]);
     }
 
     return $this;

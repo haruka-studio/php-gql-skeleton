@@ -2,12 +2,8 @@
 
 namespace Vertuoza\Libs\Exceptions;
 
-
-require_once __DIR__ . "/ProvidesExceptionArgs.php";
-
 use Exception;
 use Throwable;
-
 
 class BusinessException extends Exception implements ProvidesExceptionArgs
 {

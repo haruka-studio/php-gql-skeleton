@@ -1,30 +1,32 @@
 <?php
 
-namespace Vertuoza\Repositories\Settings\UnitTypes\Models;
+namespace Vertuoza\Repositories\Settings\Collaborators\Models;
 
 use DateTime;
 use stdClass;
 use Vertuoza\Repositories\ModelInterface;
 
-class UnitTypeModel implements ModelInterface
+class CollaboratorModel implements ModelInterface
 {
   public string $id;
-  public string $label;
+  public string $name;
+  public string $firstName;
   public ?DateTime $deleted_at;
   public ?string $tenant_id;
 
   /**
-   * Transform an anonymous class into UnitTypeModel
+   * Transform an anonymous class into CollaboratorModel
    *
    * @param stdClass $data
    *
-   * @return UnitTypeModel
+   * @return CollaboratorModel
    */
-  public static function fromStdclass(stdClass $data): UnitTypeModel
+  public static function fromStdclass(stdClass $data): CollaboratorModel
   {
-    $model = new UnitTypeModel();
-    $model->id = $data->id;
-    $model->label = $data->label;
+    $model = new CollaboratorModel();
+    $model->id = (string) $data->id;
+    $model->name = (string) $data->name;
+    $model->firstName = (string) $data->first_name;
     $model->deleted_at = $data->deleted_at;
     $model->tenant_id = $data->tenant_id;
 
@@ -58,6 +60,6 @@ class UnitTypeModel implements ModelInterface
    */
   public static function getTableName(): string
   {
-    return 'unit_type';
+    return 'collaborator';
   }
 }

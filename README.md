@@ -8,6 +8,14 @@ type Query {
   hello: String
   unitTypeById(id: String!): UnitType
   unitTypes: [UnitType]!
+  collaboratorById(id: String!): Collaborator
+  collaborators: [Collaborator]!
+}
+```
+
+```gql
+type Mutation {
+  createUnitType(input: UnitTypeCreateInput!): UnitType!
 }
 ```
 
@@ -19,4 +27,4 @@ you can simply run the solution with docker and docker-compose.
 docker-compose up
 ```
 
-This will create the database and feed it with sample data. You can open Apollo studion to test the api on http://localhost:3003/
+This will create the database and feed it with sample data. You can open Apollo studion to test the api on <http://localhost:3003/>

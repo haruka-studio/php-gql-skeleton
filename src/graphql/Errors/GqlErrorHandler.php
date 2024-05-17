@@ -28,12 +28,12 @@ class GqlErrorHandler
           ApplicationLogger::getInstance()->error($error, $errorCode, null, [], $statusCode);
         }
       }
+
       $previous = $error->getPrevious();
       if ($previous != null && $previous instanceof BusinessException) {
         $errorCode = $previous->getErrorCode();
         $statusCode = $previous->getCode();
         $message = $previous->getMessage();
-
 
         $args = [];
         if ($previous instanceof ProvidesExceptionArgs) {
@@ -70,6 +70,7 @@ class GqlErrorHandler
           );
         }
       }
+
       return $error;
     }, $errors);
     return array_map($formatter, $mapped);

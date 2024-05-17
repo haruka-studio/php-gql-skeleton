@@ -1,20 +1,20 @@
 <?php
 
-namespace Vertuoza\Usecases\Settings\UnitTypes;
+namespace Vertuoza\Usecases\Settings\Collaborators;
 
 use React\Promise\Promise;
 use Vertuoza\Api\Graphql\Context\UserRequestContext;
-use Vertuoza\Entities\Settings\UnitTypeEntity;
+use Vertuoza\Entities\Settings\CollaboratorEntity;
 use Vertuoza\Repositories\RepositoriesFactory;
-use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeRepository;
+use Vertuoza\Repositories\Settings\Collaborators\CollaboratorRepository;
 
-class UnitTypeByIdUseCase
+class CollaboratorByIdUseCase
 {
-  private UnitTypeRepository $unitTypeRepository;
+  private CollaboratorRepository $collaboratorRepository;
   private UserRequestContext $userContext;
 
   /**
-   * UnitTypeByIdUseCase constructor
+   * CollaboratorByIdUseCase constructor
    *
    * @param RepositoriesFactory $repositories
    * @param UserRequestContext $userContext
@@ -23,7 +23,7 @@ class UnitTypeByIdUseCase
     RepositoriesFactory $repositories,
     UserRequestContext $userContext
   ) {
-    $this->unitTypeRepository = $repositories->unitType;
+    $this->collaboratorRepository = $repositories->collaborator;
     $this->userContext = $userContext;
   }
 
@@ -32,10 +32,10 @@ class UnitTypeByIdUseCase
    *
    * @param string $id id of the unit type to retrieve
    *
-   * @return Promise<UnitTypeEntity>
+   * @return Promise<CollaboratorEntity>
    */
   public function handle(string $id): Promise
   {
-    return $this->unitTypeRepository->getById($id, $this->userContext->getTenantId());
+    return $this->collaboratorRepository->getById($id, $this->userContext->getTenantId());
   }
 }
